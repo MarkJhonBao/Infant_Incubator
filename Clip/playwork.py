@@ -11,7 +11,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
 Decode2Play = Queue()
-
+Cilp = Queue()
 #fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
 
 class cvDecode(QThread):
@@ -22,11 +22,16 @@ class cvDecode(QThread):
         self.changeFlag = 0     #   判断视频文件路径是否更改
         self.cap = cv2.VideoCapture()
 
+        self.clip_Flag = 0
+        self.fps = 24
+        self.cliptime = 0
+        self.i = 0
     def run(self):
         while self.threadFlag:
             if self.changeFlag == 1 and self.video_path !="":
                 self.changeFlag = 0
                 self.cap = cv2.VideoCapture(r""+self.video_path)
+                #self.cap = cv2.VideoCapture(0)             #摄像头
 
             if self.video_path !="":
                 if self.cap.isOpened():
@@ -39,6 +44,14 @@ class cvDecode(QThread):
 
                     if ret:
                         Decode2Play.put(frame)  # 解码后的数据放到队列中
+                        if self.clip_Flag:
+                            if self.i < (self.fps * self.cliptime):
+                                Cilp.put(frame)
+                                self.i = self.i + 1
+                            if self.i == (self.fps * self.cliptime):
+                                self.i = 0
+                                self.clip_Flag =0
+
                     del frame  # 释放资源
                 else:
                     #   控制重连
@@ -55,8 +68,8 @@ class play_Work(QThread):
         self.playLabel = QLabel()   #   初始化QLabel对象\
         self.clipLabel = QLabel()
         self.clipFlag = 0
-        self.fps = 24
-        self.cliptime = 0
+
+
         self.i = 0
         self.save_path =''
     def run(self):
@@ -72,23 +85,21 @@ class play_Work(QThread):
                                   QImage.Format_RGB888)  # 在这里可以对每帧图像进行处理，
                     self.playLabel.setPixmap(QPixmap.fromImage(qimg))   #   图像在QLabel上展示
 
-                    if self.clipFlag:
-                        if self.i==0:
-                            fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
-                            #video = cv2.VideoWriter(r"D:\hdu\clip.mp4", fourcc, self.fps, (self.frame.shape[1], self.frame.shape[0]))
-                            video = cv2.VideoWriter(self.save_path+'/clip1.mp4', fourcc, self.fps, (self.frame.shape[1], self.frame.shape[0]))
-                            print(self.fps)
-                            self.clipLabel.setText("正在保存。。。")
-                        if self.i < (self.fps * self.cliptime):
-                            print(self.i)
-                            video.write(self.frame)
-                            self.i = self.i+1
-
-                        else:
-                            self.clipFlag = 0
-                            self.i = 0
-                            video.release()
-                            self.clipLabel.setText("保存成功")
+                    # if self.clipFlag:
+                    #     if self.i==0:
+                    #         fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+                    #         #video = cv2.VideoWriter(r"D:\hdu\clip.mp4", fourcc, self.fps, (self.frame.shape[1], self.frame.shape[0]))
+                    #         video = cv2.VideoWriter(self.save_path+'/clip1.mp4', fourcc, self.fps, (self.frame.shape[1], self.frame.shape[0]))
+                    #         print(self.fps)
+                    #     if self.i < (self.fps * self.cliptime):
+                    #         print(self.i)
+                    #         video.write(self.frame)
+                    #         self.i = self.i+1
+                    #     else:
+                    #         self.clipFlag = 0
+                    #         self.i = 0
+                    #         video.release()
+                    #         self.clipLabel.setText("保存成功")
 
                         #self.clipLabel.setPixmap(QPixmap.fromImage(qimg))
 
@@ -97,3 +108,40 @@ class play_Work(QThread):
 
 
 
+class  clip_videofun(QThread):
+    def __init__(self):
+        super(clip_videofun, self).__init__()
+        self.clipFlag = 0
+        self.fps = 24
+        self.cliptime = 0
+        self.i = 0
+        self.threadFlag = 0
+        self.clipLabel = QLabel()
+        self.save_path = ''
+
+    def run(self):
+        while self.threadFlag:
+            if self.clipFlag:
+                if not Cilp.empty():
+                    self.frame = Cilp.get()
+                    print(self.frame)
+                    if self.i == 0:
+                        fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+                        # video = cv2.VideoWriter(r"D:\hdu\clip.mp4", fourcc, self.fps, (self.frame.shape[1], self.frame.shape[0]))
+                        video = cv2.VideoWriter('C:/Users/SukiNaoKo/Desktop' + '/clip1.mp4', fourcc, self.fps,
+                                            (self.frame.shape[1], self.frame.shape[0]))
+                        # video = cv2.VideoWriter(self.save_path + '/clip1.mp4', fourcc, self.fps,
+                        #                         (self.frame.shape[1], self.frame.shape[0]))
+                        print(self.fps)
+                    if self.i < (self.fps * self.cliptime):
+                        print(self.i)
+                        video.write(self.frame)
+                        self.i = self.i + 1
+                        self.clipLabel.setText("保存中。。")
+
+                if self.i == (self.fps * self.cliptime):
+                    self.clipFlag = 0
+                    self.i = 0
+                    video.release()
+                    self.clipLabel.setText("保存成功")
+                    self.threadFlag = 0

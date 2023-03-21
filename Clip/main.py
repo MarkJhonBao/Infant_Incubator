@@ -29,7 +29,8 @@ class MainWindow(QMainWindow, Ui_Form, cvDecode):
 
     def load_time(self):
         self.time = self.ui.input_time.text()
-        self.playwork.cliptime = int(self.time)
+        self.clipvideo.cliptime = int(self.time)
+        self.decodework.cliptime = int(self.time)
         print(int(self.time))
 
 
@@ -50,7 +51,8 @@ class MainWindow(QMainWindow, Ui_Form, cvDecode):
         #   设置文件扩展名过滤,注意用双分号间隔
         directory = QFileDialog.getExistingDirectory(self, "选取文件夹", "./")
         print(directory)
-        self.playwork.save_path = directory
+        self.clip_video.save_path = directory
+
 
 
 
@@ -72,9 +74,13 @@ class MainWindow(QMainWindow, Ui_Form, cvDecode):
         self.playwork = play_Work()
         self.playwork.threadFlag = 1
         self.playwork.playLabel = self.ui.video_lab
-        self.playwork.clipLabel = self.ui.clip_lab
+
 
         self.playwork.start()
+
+        self.clipvideo = clip_videofun()
+        self.clipvideo.clipLabel = self.ui.clip_lab
+
 
     def closeEvent(self, event):
         print("关闭线程")
@@ -89,7 +95,14 @@ class MainWindow(QMainWindow, Ui_Form, cvDecode):
 
     def clip_video(self):
 
-        self.playwork.clipFlag=1
+        self.clipvideo.clipFlag = 1
+        #self.clipvideo.threadFlag = 1
+        self.clipvideo.threadFlag = 1
+        self.clipvideo.start()
+        self.decodework.clip_Flag =1
+
+
+
 
 
 

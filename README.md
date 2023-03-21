@@ -4,6 +4,11 @@ Multi-Model Fusion or Video Analysis Task
 
 Requirements:
 
-(1) Please arrange the design of UI interface before the group meeting next Sunday. Kaicheng Zhou
+![img.png](img.png)
 
-(2) Before the next group meeting, please complete the object class for video clip access. Yanhan Zhang
+(1) InfantModel: Model File;
+    extra: Mutil-process class file;
+    UI: Ui File;
+    log: Log File;
+    util: Event class file.
+
