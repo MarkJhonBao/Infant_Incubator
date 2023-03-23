@@ -6,7 +6,6 @@ from PyQt5.QtCore import QThread, pyqtSignal
 
 torch.backends.cudnn.benchmark = True
 
-
 def label_conversion(probs_01):
     prob = ','.join(str(i) for i in probs_01)
     prob = prob.replace(' ', ',')
@@ -48,8 +47,8 @@ def moderl_load():
     # checkpoint = torch.load('E:\HDU\Project\InfantMulti\\run\\3DResnet_每50轮80%衰减50轮\models\\3DResnet-ucf101_epoch-1999.pth.tar', map_location='cpu')
 
     model = Resnet.generate_model(50)
-    checkpoint = torch.load(r'D:\hdu\InfantUI\resnet.pth.tar', map_location='cpu')
-    model.load_state_dict(checkpoint['state_dict'])
+    # checkpoint = torch.load(r'D:\hdu\InfantUI\resnet.pth.tar', map_location='cpu')
+    # model.load_state_dict(checkpoint['state_dict'])
     model.to(device)
     model.eval()
 
