@@ -6,9 +6,6 @@ Requirements:
 
 ![img.png](img.png)
 
-(1) InfantModel: Model File;
-    extra: Mutil-process class file;
-    UI: Ui File;
-    log: Log File;
-    util: Event class file.
+1、项目介绍
+    项目背景:智能保育箱监控系统采用肢体动作识别技术进行分析。
 
