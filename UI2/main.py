@@ -3,8 +3,8 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from UI2.Infant import Ui_MainWindow
 from UI2.video_work import cvDecode, play_Work
+from UI2.target_work import target_Work
 import sys
-import random
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def get_screen_width_and_height(self):
@@ -48,13 +48,50 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.playwork = play_Work()
         self.playwork.threadFlag = 1
         self.playwork.playLabel = self.label_video
-        self.playwork.recognition_result = self.recognition_result
-        self.playwork.recognition_audio = self.audiolist_show
-        self.playwork.data_statistic_show = self.data_statistic_show
-        self.playwork.speech_signal=self.auidoplot_show
+        # self.playwork.recognition_result = self.recognition_result
+        # self.playwork.recognition_audio = self.audiolist_show
+        # self.playwork.data_statistic_show = self.data_statistic_show
+        # self.playwork.speech_signal = self.auidoplot_show
+        self.playwork.target_Work.xintiao_value = self.xintiao_value
+        self.playwork.target_Work.xuetang_value = self.xuetang_value
+        self.playwork.target_Work.huxilv_value = self.huxilv_value
+        self.playwork.target_Work.wendu_value = self.wendu_value
+        self.playwork.target_Work.tiye_value = self.tiye_value
+        self.playwork.target_Work.tiwen_value = self.tiwen_value
+        self.playwork.target_Work.pingfen_value = self.pingfen_value
+        self.playwork.target_Work.shijian_value = self.shijian_value
+
+        self.playwork.target_Work.xintiao_graph = self.xintiao_graph
+        self.playwork.target_Work.xuetang_graph = self.xuetang_graph
+        self.playwork.target_Work.huxilv_graph = self.huxilv_graph
+        self.playwork.target_Work.wendu_graph = self.wendu_graph
+        self.playwork.target_Work.tiwen_graph = self.tiwen_graph
+        self.playwork.target_Work.pingfen_graph = self.pingfen_graph
+
+        # self.targetwork.xintiao_value = self.xintiao_value
+        # self.targetwork.xuetang_value = self.xuetang_value
+        # self.targetwork.huxilv_value = self.huxilv_value
+        # self.targetwork.wendu_value = self.wendu_value
+        # self.targetwork.tiye_value = self.tiye_value
+        # self.targetwork.tiwen_value = self.tiwen_value
+        # self.targetwork.pingfen_value = self.pingfen_value
+        # self.targetwork.shijian_value = self.shijian_value
+        #
+        # self.targetwork.xintiao_graph = self.xintiao_graph
+        # self.targetwork.xuetang_graph = self.xuetang_graph
+        # self.targetwork.huxilv_graph = self.huxilv_graph
+        # self.targetwork.wendu_graph = self.wendu_graph
+        # self.targetwork.tiwen_graph = self.tiwen_graph
+        # self.targetwork.pingfen_graph = self.pingfen_graph
+
         self.play_thread = QThread()  # 创建线程
         self.playwork.moveToThread(self.play_thread)
         self.play_thread.started.connect(self.playwork.play)  # 线程与类方法进行绑定
+
+        # self.play_thread1 = QThread()  # 创建线程
+        # self.playwork.moveToThread(self.play_thread1)
+        # self.play_thread1.started.connect()  # 线程与类方法进行绑定
+
         # self.play_thread.start()
 
 
@@ -102,25 +139,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.playwork.threadFlag = 0
             self.play_thread.quit()
 
-    def show_targrt(self):
-
-        xintiao = random.randint(124, 125)
-        tiwen = random.randint(353, 356) / 10
-        xuetang = random.randint(45, 46) / 10
-        huxilv = random.randint(44, 45)
-        wendu = random.randint(231, 232) / 10
-        tiye = 100
-        pingfen = 89
-        shijian = 4
-
-        self.xintiao_value.setText(str(xintiao) + "t/m")
-        self.tiwen_value.setText(str(tiwen) + "℃")
-        self.xuetang_value.setText(str(xuetang) + "mm/L")
-        self.huxilv_value.setText(str(huxilv) + "t/m")
-        self.wendu_value.setText(str(wendu) + "℃")
-        self.tiye_value.setText(str(tiye) + "mL")
-        self.pingfen_value.setText(str(pingfen))
-        self.shijian_value.setText(str(shijian) + "h later")
 
 class QSSLoad:
     @staticmethod
@@ -133,5 +151,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     main_window = MainWindow()
     main_window.show()
-    main_window.show_targrt()
     sys.exit(app.exec_())
