@@ -24,6 +24,7 @@ class target_Work(QObject):
     def __init__(self):
         super(target_Work, self).__init__()
         self.target_list = np.zeros((8, 22), dtype=float)
+        self.count = 0
         self.xintiao_value = QLabel()
         self.tiwen_value = QLabel()
         self.xuetang_value = QLabel()
@@ -32,24 +33,48 @@ class target_Work(QObject):
         self.tiye_value = QLabel()
         self._value = QLabel()
         self.shijian_value = QLabel()
-        self.xintiao_graph = QGraphicsView()
-        self.tiwen_graph = QGraphicsView()
-        self.xuetang_graph = QGraphicsView()
-        self.huxilv_graph = QGraphicsView()
-        self.wendu_graph = QGraphicsView()
-        self.pingfen_graph = QGraphicsView()
+        self.xintiao_graph = QLabel()
+        self.tiwen_graph = QLabel()
+        self.xuetang_graph = QLabel()
+        self.huxilv_graph = QLabel()
+        self.wendu_graph = QLabel()
+        self.pingfen_graph = QLabel()
 
     def get_targrt(self):
-        xintiao = random.randint(100, 125)
-        tiwen = random.randint(300, 356) / 10
-        xuetang = random.randint(40, 46) / 10
-        huxilv = random.randint(40, 45)
-        wendu = random.randint(200, 232) / 10
-        tiye = 100
-        pingfen = 89
-        shijian = 4
+        # xintiao = random.randint(120, 123)
+        # tiwen = random.randint(359, 362) / 10
+        # xuetang = random.randint(45, 46) / 10
+        # huxilv = random.randint(58, 60)
+        # wendu = random.randint(230, 232) / 10
+        # tiye = 100
+        # pingfen = 89
+        # shijian = 4
 
-        target = [xintiao, tiwen, xuetang, huxilv, wendu, tiye, pingfen, shijian]
+        with open(r"xintiao.txt", "r") as f:
+            data = [float(line.strip()) for line in f]
+        xintiao = data[self.count+21].__int__()
+
+        with open(r"tiwen.txt", "r") as f:
+            data = [float(line.strip()) for line in f]
+        tiwen = round(data[self.count+21], 1)
+
+        with open(r"xuetang.txt", "r") as f:
+            data = [float(line.strip()) for line in f]
+        xuetang = round(data[self.count+21], 1)
+
+        with open(r"huxilv.txt", "r") as f:
+            data = [float(line.strip()) for line in f]
+        huxilv = data[self.count+21].__int__()
+
+        with open(r"wendu.txt", "r") as f:
+            data = [float(line.strip()) for line in f]
+        wendu = round(data[self.count+21], 1)
+
+        with open(r"pingfen.txt", "r") as f:
+            data = [float(line.strip()) for line in f]
+        pingfen = data[self.count+21].__int__()
+
+        target = [xintiao, tiwen, xuetang, huxilv, wendu,  pingfen]
 
         return target
 
@@ -78,12 +103,29 @@ class target_Work(QObject):
 
         self.xintiao_value.setText(str(xintiao) + "t/m")
         self.tiwen_value.setText(str(tiwen) + "℃")
-        self.xuetang_value.setText(str(xuetang) + "mm/L")
+        self.xuetang_value.setText(str(xuetang) + "mmol/L")
         self.huxilv_value.setText(str(huxilv) + "t/m")
         self.wendu_value.setText(str(wendu) + "℃")
         self.tiye_value.setText(str(tiye) + "mL")
         self.pingfen_value.setText(str(pingfen))
         self.shijian_value.setText(str(shijian) + "h later")
+
+    def show_target_new(self):
+        target = self.get_targrt()
+
+        xintiao = target[0]
+        tiwen = target[1]
+        xuetang = target[2]
+        huxilv = target[3]
+        wendu = target[4]
+        pingfen = target[5]
+
+        self.xintiao_value.setText(str(xintiao) + "t/m")
+        self.tiwen_value.setText(str(tiwen) + "℃")
+        self.xuetang_value.setText(str(xuetang) + "mmol/L")
+        self.huxilv_value.setText(str(huxilv) + "t/m")
+        self.wendu_value.setText(str(wendu) + "℃")
+        self.pingfen_value.setText(str(pingfen))
 
     def graph_init(self):
         self.xintiao_graph.scene = QGraphicsScene(self)
@@ -183,264 +225,203 @@ class target_Work(QObject):
         self.pingfen_graph.show()
 
     def draw_graph(self):
-        self.draw_xintiao_graph()
-        self.draw_tiwen_graph()
-        self.draw_xuetang_graph()
-        self.draw_huxilv_graph()
-        self.draw_wendu_graph()
-        self.draw_pingfen_graph()
+        self.count += 1
 
-    def draw_xintiao_graph(self):
-        xintiao_average = 120
-        xintiao_line = 0
-        xintiao_sensitivity = 1
+        xintiao = self.draw_xintiao().toqpixmap()
+        self.xintiao_graph.setPixmap(xintiao)
+        self.xintiao_graph.setScaledContents(True)
 
-        self.xintiao_graph.scene = QGraphicsScene(self)
-        self.xintiao_graph.setScene(self.xintiao_graph.scene)
+        tiwen = self.draw_tiwen().toqpixmap()
+        self.tiwen_graph.setPixmap(tiwen)
+        self.tiwen_graph.setScaledContents(True)
 
-        coordinate_path = QPainterPath()
-        coordinate_path.moveTo(-218, -80)
-        coordinate_path.lineTo(QPointF(218, -80))
-        coordinate_path.moveTo(-218, 80)
-        coordinate_path.lineTo(QPointF(218, 80))
-        coordinate_pen = QPen(QColor(255, 0, 0))
-        coordinate_pen.setWidth(2)
-        coordinate_item = QGraphicsPathItem(coordinate_path)
-        coordinate_item.setPen(coordinate_pen)
-        self.xintiao_graph.scene.addItem(coordinate_item)
-        self.xintiao_graph.show()
+        xuetang = self.draw_xuetang().toqpixmap()
+        self.xuetang_graph.setPixmap(xuetang)
+        self.xuetang_graph.setScaledContents(True)
 
-        self.xintiao_graph.path = QPainterPath()
-        for i in range(22):
-            if self.target_list[xintiao_line][i] == 0:
-                self.target_list[xintiao_line][i] = xintiao_average
+        huxilv = self.draw_huxilv().toqpixmap()
+        self.huxilv_graph.setPixmap(huxilv)
+        self.huxilv_graph.setScaledContents(True)
 
-        self.xintiao_graph.path.moveTo(-218, (int(-self.target_list[xintiao_line][0])
-                                              + xintiao_average) * xintiao_sensitivity)
+        wendu = self.draw_wendu().toqpixmap()
+        self.wendu_graph.setPixmap(wendu)
+        self.wendu_graph.setScaledContents(True)
 
-        for i in range(20):
-            self.xintiao_graph.path.lineTo(QPointF(-200 + 20 * i, (int(-self.target_list[xintiao_line][i + 1])
-                                                                   + xintiao_average) * xintiao_sensitivity))
+        pingfen = self.draw_pingfen().toqpixmap()
+        self.pingfen_graph.setPixmap(pingfen)
+        self.pingfen_graph.setScaledContents(True)
 
-        self.xintiao_graph.path.lineTo(QPointF(218, (int(-self.target_list[xintiao_line][21])
-                                                     + xintiao_average) * xintiao_sensitivity))
+    def draw_xintiao(self):
+        # print("start")
+        plt.rcParams['font.family'] = ['SimHei']
+        # plt.figure(figsize=(5, 3))
+        with open(r"xintiao.txt", "r") as f:
+            data = [float(line.strip()) for line in f]
+        # 绘制折线图
+        sub_numbers = data[self.count:self.count+21]
+        plt.title(r'温度时间统计', fontsize=5)
+        # plt.xlabel('Time')
+        # plt.ylabel('Temperature')
+        # plt.ylim(27, 40)
+        fig = plt.figure(figsize=(310 / 90, 220 / 90), dpi=90)
 
-        pen = QPen(QColor(65, 155, 255))
-        pen.setWidth(2)
-        item = QGraphicsPathItem(self.xintiao_graph.path)
-        item.setPen(pen)
-        # item.setFlag(item.ItemIsMovable)
-        # item.setFlag(item.ItemIsSelectable)
-        self.xintiao_graph.scene.addItem(item)
-        self.xintiao_graph.show()
+        plt.plot(sub_numbers, color='#f89588', linewidth=2, linestyle='-', label='心率')
+        plt.yticks([120, 121, 122, 123, 124])
+        plt.grid()
+        plt.legend()
+        # plt.show()
+        # print("end")
+        canvas = FigureCanvasAgg(plt.gcf())
+        fig.canvas.draw()
+        w, h = canvas.get_width_height()
+        buf = np.fromstring(canvas.tostring_argb(), dtype=np.uint8)
+        buf.shape = (w, h, 4)
+        buf = np.roll(buf, 3, axis=2)
+        image = Image.frombytes("RGBA", (w, h), buf.tostring())
+        return image
 
-    def draw_tiwen_graph(self):
-        tiwen_average = 35
-        tiwen_line = 1
-        tiwen_sensitivity = 5
+    def draw_tiwen(self):
+        # print("start")
+        plt.rcParams['font.family'] = ['SimHei']
+        # plt.figure(figsize=(5, 3))
+        with open(r"tiwen.txt", "r") as f:
+            data = [float(line.strip()) for line in f]
+        # 绘制折线图
+        sub_numbers = data[self.count:self.count + 21]
+        # plt.title(r'温度时间统计', fontsize=5)
+        # plt.xlabel('Time')
+        # plt.ylabel('Temperature')
+        # plt.ylim(120, 130)
 
-        self.tiwen_graph.scene = QGraphicsScene(self)
-        self.tiwen_graph.setScene(self.tiwen_graph.scene)
+        fig = plt.figure(figsize=(310 / 90, 220 / 90), dpi=90)
 
-        coordinate_path = QPainterPath()
-        coordinate_path.moveTo(-218, -80)
-        coordinate_path.lineTo(QPointF(218, -80))
-        coordinate_path.moveTo(-218, 80)
-        coordinate_path.lineTo(QPointF(218, 80))
-        coordinate_pen = QPen(QColor(255, 0, 0))
-        coordinate_pen.setWidth(2)
-        coordinate_item = QGraphicsPathItem(coordinate_path)
-        coordinate_item.setPen(coordinate_pen)
-        self.tiwen_graph.scene.addItem(coordinate_item)
-        self.tiwen_graph.show()
+        plt.plot(sub_numbers, color='#63b2ee', linewidth=2, linestyle='-', label='体温')
+        plt.yticks([35.0, 35.5, 36.0, 36.5, 37.0])
+        plt.grid()
+        plt.legend()
+        # plt.show()
+        # print("end")
+        canvas = FigureCanvasAgg(plt.gcf())
+        fig.canvas.draw()
+        w, h = canvas.get_width_height()
+        buf = np.fromstring(canvas.tostring_argb(), dtype=np.uint8)
+        buf.shape = (w, h, 4)
+        buf = np.roll(buf, 3, axis=2)
+        image = Image.frombytes("RGBA", (w, h), buf.tostring())
+        return image
 
-        self.tiwen_graph.path = QPainterPath()
-        for i in range(22):
-            if self.target_list[tiwen_line][i] == 0:
-                self.target_list[tiwen_line][i] = tiwen_average
+    def draw_xuetang(self):
+        # print("start")
+        plt.rcParams['font.family'] = ['SimHei']
+        # plt.figure(figsize=(5, 3))
+        with open(r"xuetang.txt", "r") as f:
+            data = [float(line.strip()) for line in f]
+        # 绘制折线图
+        sub_numbers = data[self.count:self.count + 21]
+        plt.title(r'温度时间统计', fontsize=5)
+        # plt.xlabel('Time')
+        plt.ylabel('Temperature')
+        plt.ylim(27, 40)
+        fig = plt.figure(figsize=(310 / 90, 220 / 90), dpi=90)
 
-        self.tiwen_graph.path.moveTo(-218, (int(-self.target_list[tiwen_line][0])
-                                            + tiwen_average) * tiwen_sensitivity)
+        plt.plot(sub_numbers, color='#76da91', linewidth=2, linestyle='-', label='血糖')
+        plt.yticks([3, 4, 5, 6, 7])
+        plt.grid()
+        plt.legend()
+        # plt.show()
+        # print("end")
+        canvas = FigureCanvasAgg(plt.gcf())
+        fig.canvas.draw()
+        w, h = canvas.get_width_height()
+        buf = np.fromstring(canvas.tostring_argb(), dtype=np.uint8)
+        buf.shape = (w, h, 4)
+        buf = np.roll(buf, 3, axis=2)
+        image = Image.frombytes("RGBA", (w, h), buf.tostring())
+        return image
 
-        for i in range(20):
-            self.tiwen_graph.path.lineTo(QPointF(-200 + 20 * i, (int(-self.target_list[tiwen_line][i + 1])
-                                                                 + tiwen_average) * tiwen_sensitivity))
-        self.tiwen_graph.path.lineTo(QPointF(218, (int(-self.target_list[tiwen_line][21])
-                                                   + tiwen_average) * tiwen_sensitivity))
+    def draw_huxilv(self):
+        # print("start")
+        plt.rcParams['font.family'] = ['SimHei']
+        # plt.figure(figsize=(5, 3))
+        with open(r"huxilv.txt", "r") as f:
+            data = [float(line.strip()) for line in f]
+        # 绘制折线图
+        sub_numbers = data[self.count:self.count + 21]
+        plt.title(r'温度时间统计', fontsize=5)
+        # plt.xlabel('Time')
+        plt.ylabel('Temperature')
+        plt.ylim(27, 40)
+        fig = plt.figure(figsize=(310 / 90, 220 / 90), dpi=90)
 
-        pen = QPen(QColor(65, 155, 255))
-        pen.setWidth(2)
-        item = QGraphicsPathItem(self.tiwen_graph.path)
-        item.setPen(pen)
-        # item.setFlag(item.ItemIsMovable)
-        # item.setFlag(item.ItemIsSelectable)
-        self.tiwen_graph.scene.addItem(item)
-        self.tiwen_graph.show()
+        plt.plot(sub_numbers, color='#f8cb7f', linewidth=2, linestyle='-', label='呼吸率')
+        plt.yticks([55, 56, 57, 58, 59])
+        plt.grid()
+        plt.legend()
+        # plt.show()
+        # print("end")
+        canvas = FigureCanvasAgg(plt.gcf())
+        fig.canvas.draw()
+        w, h = canvas.get_width_height()
+        buf = np.fromstring(canvas.tostring_argb(), dtype=np.uint8)
+        buf.shape = (w, h, 4)
+        buf = np.roll(buf, 3, axis=2)
+        image = Image.frombytes("RGBA", (w, h), buf.tostring())
+        return image
 
-    def draw_xuetang_graph(self):
-        xuetang_average = 4
-        xuetang_line = 2
-        xuetang_sensitivity = 20
+    def draw_wendu(self):
+        # print("start")
+        plt.rcParams['font.family'] = ['SimHei']
+        # plt.figure(figsize=(5, 3))
+        with open(r"wendu.txt", "r") as f:
+            data = [float(line.strip()) for line in f]
+        # 绘制折线图
+        sub_numbers = data[self.count:self.count + 21]
+        plt.title(r'温度时间统计', fontsize=5)
+        # plt.xlabel('Time')
+        plt.ylabel('Temperature')
+        plt.ylim(27, 40)
+        fig = plt.figure(figsize=(310 / 90, 220 / 90), dpi=90)
 
-        self.xuetang_graph.scene = QGraphicsScene(self)
-        self.xuetang_graph.setScene(self.xuetang_graph.scene)
+        plt.plot(sub_numbers, color='#7cd6cf', linewidth=2, linestyle='-', label='温度')
+        plt.yticks([22.0, 22.5, 23.0, 23.5, 24])
+        plt.grid()
+        plt.legend()
+        # plt.show()
+        # print("end")
+        canvas = FigureCanvasAgg(plt.gcf())
+        fig.canvas.draw()
+        w, h = canvas.get_width_height()
+        buf = np.fromstring(canvas.tostring_argb(), dtype=np.uint8)
+        buf.shape = (w, h, 4)
+        buf = np.roll(buf, 3, axis=2)
+        image = Image.frombytes("RGBA", (w, h), buf.tostring())
+        return image
 
-        coordinate_path = QPainterPath()
-        coordinate_path.moveTo(-218, -80)
-        coordinate_path.lineTo(QPointF(218, -80))
-        coordinate_path.moveTo(-218, 80)
-        coordinate_path.lineTo(QPointF(218, 80))
-        coordinate_pen = QPen(QColor(255, 0, 0))
-        coordinate_pen.setWidth(2)
-        coordinate_item = QGraphicsPathItem(coordinate_path)
-        coordinate_item.setPen(coordinate_pen)
-        self.xuetang_graph.scene.addItem(coordinate_item)
-        self.xuetang_graph.show()
+    def draw_pingfen(self):
+        # print("start")
+        plt.rcParams['font.family'] = ['SimHei']
+        # plt.figure(figsize=(5, 3))
+        with open(r"pingfen.txt", "r") as f:
+            data = [float(line.strip()) for line in f]
+        # 绘制折线图
+        sub_numbers = data[self.count:self.count + 21]
+        plt.title(r'温度时间统计', fontsize=5)
+        # plt.xlabel('Time')
+        plt.ylabel('Temperature')
+        plt.ylim(27, 40)
+        fig = plt.figure(figsize=(310 / 90, 220 / 90), dpi=90)
 
-        self.xuetang_graph.path = QPainterPath()
-        for i in range(22):
-            if self.target_list[xuetang_line][i] == 0:
-                self.target_list[xuetang_line][i] = xuetang_average
-
-        self.xuetang_graph.path.moveTo(-218, int((-self.target_list[xuetang_line][0]
-                                                  + xuetang_average) * xuetang_sensitivity))
-        for i in range(20):
-            self.xuetang_graph.path.lineTo(QPointF(-200 + 20 * i, int((-self.target_list[xuetang_line][i + 1]
-                                                                       + xuetang_average) * xuetang_sensitivity)))
-        self.xuetang_graph.path.lineTo(QPointF(218, int((-self.target_list[xuetang_line][21]
-                                                         + xuetang_average) * xuetang_sensitivity)))
-
-        pen = QPen(QColor(65, 155, 255))
-        pen.setWidth(2)
-        item = QGraphicsPathItem(self.xuetang_graph.path)
-        item.setPen(pen)
-        # item.setFlag(item.ItemIsMovable)
-        # item.setFlag(item.ItemIsSelectable)
-        self.xuetang_graph.scene.addItem(item)
-        self.xuetang_graph.show()
-
-    def draw_huxilv_graph(self):
-        huxilv_average = 45
-        huxilv_line = 3
-        huxilv_sensitivity = 5
-
-        self.huxilv_graph.scene = QGraphicsScene(self)
-        self.huxilv_graph.setScene(self.huxilv_graph.scene)
-
-        coordinate_path = QPainterPath()
-        coordinate_path.moveTo(-218, -80)
-        coordinate_path.lineTo(QPointF(218, -80))
-        coordinate_path.moveTo(-218, 80)
-        coordinate_path.lineTo(QPointF(218, 80))
-        coordinate_pen = QPen(QColor(255, 0, 0))
-        coordinate_pen.setWidth(2)
-        coordinate_item = QGraphicsPathItem(coordinate_path)
-        coordinate_item.setPen(coordinate_pen)
-        self.huxilv_graph.scene.addItem(coordinate_item)
-        self.huxilv_graph.show()
-
-        self.huxilv_graph.path = QPainterPath()
-        for i in range(22):
-            if self.target_list[huxilv_line][i] == 0:
-                self.target_list[huxilv_line][i] = huxilv_average
-
-        self.huxilv_graph.path.moveTo(-218, int((-self.target_list[huxilv_line][0]
-                                                 + huxilv_average) * huxilv_sensitivity))
-        for i in range(20):
-            self.huxilv_graph.path.lineTo(QPointF(-200 + 20 * i, int((-self.target_list[huxilv_line][i + 1]
-                                                                      + huxilv_average) * huxilv_sensitivity)))
-        self.huxilv_graph.path.lineTo(QPointF(218, int((-self.target_list[huxilv_line][21]
-                                                        + huxilv_average) * huxilv_sensitivity)))
-
-        pen = QPen(QColor(65, 155, 255))
-        pen.setWidth(2)
-        item = QGraphicsPathItem(self.huxilv_graph.path)
-        item.setPen(pen)
-        # item.setFlag(item.ItemIsMovable)
-        # item.setFlag(item.ItemIsSelectable)
-        self.huxilv_graph.scene.addItem(item)
-        self.huxilv_graph.show()
-
-    def draw_wendu_graph(self):
-        wendu_average = 20
-        wendu_line = 4
-        wendu_sensitivity = 20
-
-        self.wendu_graph.scene = QGraphicsScene(self)
-        self.wendu_graph.setScene(self.wendu_graph.scene)
-
-        coordinate_path = QPainterPath()
-        coordinate_path.moveTo(-218, -80)
-        coordinate_path.lineTo(QPointF(218, -80))
-        coordinate_path.moveTo(-218, 80)
-        coordinate_path.lineTo(QPointF(218, 80))
-        coordinate_pen = QPen(QColor(255, 0, 0))
-        coordinate_pen.setWidth(2)
-        coordinate_item = QGraphicsPathItem(coordinate_path)
-        coordinate_item.setPen(coordinate_pen)
-        self.wendu_graph.scene.addItem(coordinate_item)
-        self.wendu_graph.show()
-
-        self.wendu_graph.path = QPainterPath()
-        for i in range(22):
-            if self.target_list[wendu_line][i] == 0:
-                self.target_list[wendu_line][i] = wendu_average
-
-        self.wendu_graph.path.moveTo(-218, int((-self.target_list[wendu_line][0]
-                                                + wendu_average) * wendu_sensitivity))
-        for i in range(20):
-            self.wendu_graph.path.lineTo(QPointF(-200 + 20 * i, int((-self.target_list[wendu_line][i + 1]
-                                                                     + wendu_average) * wendu_sensitivity)))
-        self.wendu_graph.path.lineTo(QPointF(218, int((-self.target_list[wendu_line][21]
-                                                       + wendu_average) * wendu_sensitivity)))
-
-        pen = QPen(QColor(65, 155, 255))
-        pen.setWidth(2)
-        item = QGraphicsPathItem(self.wendu_graph.path)
-        item.setPen(pen)
-        # item.setFlag(item.ItemIsMovable)
-        # item.setFlag(item.ItemIsSelectable)
-        self.wendu_graph.scene.addItem(item)
-        self.wendu_graph.show()
-
-    def draw_pingfen_graph(self):
-        pingfen_average = 85
-        pingfen_line = 6
-        pingfen_sensitivity = 5
-
-        self.pingfen_graph.scene = QGraphicsScene(self)
-        self.pingfen_graph.setScene(self.pingfen_graph.scene)
-
-        coordinate_path = QPainterPath()
-        coordinate_path.moveTo(-218, -80)
-        coordinate_path.lineTo(QPointF(218, -80))
-        coordinate_path.moveTo(-218, 80)
-        coordinate_path.lineTo(QPointF(218, 80))
-        coordinate_pen = QPen(QColor(255, 0, 0))
-        coordinate_pen.setWidth(2)
-        coordinate_item = QGraphicsPathItem(coordinate_path)
-        coordinate_item.setPen(coordinate_pen)
-        self.pingfen_graph.scene.addItem(coordinate_item)
-        self.pingfen_graph.show()
-
-        self.pingfen_graph.path = QPainterPath()
-        for i in range(22):
-            if self.target_list[pingfen_line][i] == 0:
-                self.target_list[pingfen_line][i] = pingfen_average
-
-        self.pingfen_graph.path.moveTo(-218, int((-self.target_list[pingfen_line][0]
-                                                  + pingfen_average) * pingfen_sensitivity))
-        for i in range(20):
-            self.pingfen_graph.path.lineTo(QPointF(-200 + 20 * i, int((-self.target_list[pingfen_line][i + 1]
-                                                                       + pingfen_average) * pingfen_sensitivity)))
-        self.pingfen_graph.path.lineTo(QPointF(218, int((-self.target_list[pingfen_line][21]
-                                                         + pingfen_average) * pingfen_sensitivity)))
-
-        pen = QPen(QColor(65, 155, 255))
-        pen.setWidth(2)
-        item = QGraphicsPathItem(self.pingfen_graph.path)
-        item.setPen(pen)
-        # item.setFlag(item.ItemIsMovable)
-        # item.setFlag(item.ItemIsSelectable)
-        self.pingfen_graph.scene.addItem(item)
-        self.pingfen_graph.show()
+        plt.plot(sub_numbers, color='#3232CD', linewidth=2, linestyle='-', label='评分')
+        plt.yticks([75, 80, 85, 90, 95])
+        plt.grid()
+        plt.legend()
+        # plt.show()
+        # print("end")
+        canvas = FigureCanvasAgg(plt.gcf())
+        fig.canvas.draw()
+        w, h = canvas.get_width_height()
+        buf = np.fromstring(canvas.tostring_argb(), dtype=np.uint8)
+        buf.shape = (w, h, 4)
+        buf = np.roll(buf, 3, axis=2)
+        image = Image.frombytes("RGBA", (w, h), buf.tostring())
+        return image

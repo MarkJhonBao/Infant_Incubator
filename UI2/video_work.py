@@ -9,6 +9,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from matplotlib.backends.backend_agg import FigureCanvasAgg
+import re
 
 # from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
@@ -69,19 +70,11 @@ class play_Work(QObject):
         self.recognition_audio = QListWidget()
         self.data_statistic_show = QLabel()
         # self.xintiao_value = QLabel()
-        # self.tiwen_value = QLabel()
-        # self.xuetang_value = QLabel()
-        # self.huxilv_value = QLabel()
-        # self.wendu_value = QLabel()
-        # self.tiye_value = QLabel()
-        # self._value = QLabel()
-        # self.shijian_value = QLabel()
-        # self.xintiao_graph = QGraphicsView()
-        # self.tiwen_graph = QGraphicsView()
-        # self.xuetang_graph = QGraphicsView()
-        # self.huxilv_graph = QGraphicsView()
-        # self.wendu_graph = QGraphicsView()
-        # self.pingfen_graph = QGraphicsView()
+        self.head = QLabel()
+        self.left_hand = QLabel()
+        self.right_hand = QLabel()
+        self.left_feet = QLabel()
+        self.right_feet = QLabel()
 
         #导入模型
         self.infant_detection_model = moderl_load()
@@ -99,6 +92,9 @@ class play_Work(QObject):
         self.sum=0
         self.start_time=0
         self.target_Work = target_Work()
+        self.act_count = [0, 0, 0, 0, 0]
+        self.time1 = time.time()
+        self.time2 = 0
 
         #   不需要重写run方法
     def play(self):
@@ -117,7 +113,7 @@ class play_Work(QObject):
         cnt = 0
 
         # self.graph_init()
-        self.target_Work.graph_init()
+        # self.target_Work.graph_init()
 
         while self.threadFlag:
             # print("进入",switchflag)
@@ -160,7 +156,7 @@ class play_Work(QObject):
                     frame, class_result, prob_result = infantDetection(model, clip=self.clip, frame=frame)
                     self.prob_result = prob_result
                     c=sum(sum(class_result))
-                    print(sum(class_result))
+                    # print(sum(class_result))
                     result = sum(class_result)
                     class_result = str(class_result)
                     # print(c)
@@ -176,18 +172,16 @@ class play_Work(QObject):
                     self.clip = []
                     self.clip2 = []
 
-                    self.target_Work.add_target()
-                    self.target_Work.show_target()
+                    # self.target_Work.add_target()
+                    self.target_Work.show_target_new()
                     self.target_Work.draw_graph()
 
-                    # self.add_target()
-                    # self.show_target()
-                    # self.draw_graph()
                     self.save_record(result)
+                    self.show_record()
 
 
                 if self.playFlag == 1:
-                    frame = cv2.resize(frame, (860, 484), cv2.INTER_LINEAR)
+                    frame = cv2.resize(frame, (340, 190), cv2.INTER_LINEAR)
                     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                     qimg = QImage(frame.data, frame.shape[1], frame.shape[0],
                                   QImage.Format_RGB888)  # 在这里可以对每帧图像进行处理，
@@ -279,8 +273,8 @@ class play_Work(QObject):
         # print("start")
         plt.rcParams['font.sans-serif'] = ['SimHei']
         name_list = ['头部', '左手', '左腿', '右手', '右腿']
-        num_list = self.prob_result
-        # num_list = [1, 1, 1, 1, 1]
+        # num_list = self.prob_result
+        num_list = [1, 1, 1, 1, 1]
         fig = plt.figure(figsize=(6.5, 4))
 
         plt.ylim(0, 1)
@@ -325,424 +319,12 @@ class play_Work(QObject):
         # print("end")
         return output_path
 
-    # def get_targrt(self):
-    #
-    #     xintiao = random.randint(100, 125)
-    #     tiwen = random.randint(300, 356) / 10
-    #     xuetang = random.randint(40, 46) / 10
-    #     huxilv = random.randint(40, 45)
-    #     wendu = random.randint(200, 232) / 10
-    #     tiye = 100
-    #     pingfen = 89
-    #     shijian = 4
-    #
-    #     target = [xintiao, tiwen, xuetang, huxilv, wendu, tiye, pingfen, shijian]
-    #
-    #     return target
-    #
-    # target_list = np.zeros((8, 22), dtype=float)
-    #
-    # def add_target(self):
-    #
-    #     new_target = self.get_targrt()
-    #     for i in range(8):
-    #         for j in range(21):
-    #             self.target_list[i][j] = self.target_list[i][j+1]
-    #             # print(self.target_list[i][j])
-    #     for i in range(8):
-    #         self.target_list[i][21] = new_target[i]
-    #
-    # def show_target(self):
-    #
-    #     target = []
-    #     for i in range(8):
-    #         target.append(self.target_list[i][21])
-    #
-    #     xintiao = target[0]
-    #     tiwen = target[1]
-    #     xuetang = target[2]
-    #     huxilv = target[3]
-    #     wendu = target[4]
-    #     tiye = target[5]
-    #     pingfen = target[6]
-    #     shijian = target[7]
-    #
-    #
-    #     self.xintiao_value.setText(str(xintiao) + "t/m")
-    #     self.tiwen_value.setText(str(tiwen) + "℃")
-    #     self.xuetang_value.setText(str(xuetang) + "mm/L")
-    #     self.huxilv_value.setText(str(huxilv) + "t/m")
-    #     self.wendu_value.setText(str(wendu) + "℃")
-    #     self.tiye_value.setText(str(tiye) + "mL")
-    #     self.pingfen_value.setText(str(pingfen))
-    #     self.shijian_value.setText(str(shijian) + "h later")
-
     def png_to_gif(self, n):
         # img_lst = os.listdir(path)
         # frames = []
         frame = self.clip2
         path = "C:\\Users\\dev1se\\Desktop\\InfantGUI\\gif\\save" + str(n) + ".gif"
         imageio.mimsave(path, frame, 'GIF', fps=16)
-
-    # def graph_init(self):
-    #     self.xintiao_graph.scene = QGraphicsScene(self)
-    #     self.xintiao_graph.setScene(self.xintiao_graph.scene)
-    #     self.xintiao_graph.path = QPainterPath()
-    #     self.xintiao_graph.path.moveTo(-218, -80)
-    #     self.xintiao_graph.path.lineTo(QPointF(218, -80))
-    #     self.xintiao_graph.path.moveTo(-218, 80)
-    #     self.xintiao_graph.path.lineTo(QPointF(218, 80))
-    #     pen = QPen(QColor(255, 0, 0))
-    #     pen.setWidth(2)
-    #     item = QGraphicsPathItem(self.xintiao_graph.path)
-    #     item.setPen(pen)
-    #     item.setFlag(item.ItemIsMovable)
-    #     item.setFlag(item.ItemIsSelectable)
-    #     self.xintiao_graph.scene.addItem(item)
-    #     self.xintiao_graph.show()
-    #
-    #     self.tiwen_graph.scene = QGraphicsScene(self)
-    #     self.tiwen_graph.setScene(self.tiwen_graph.scene)
-    #     self.tiwen_graph.path = QPainterPath()
-    #     self.tiwen_graph.path.moveTo(-218, -80)
-    #     self.tiwen_graph.path.lineTo(QPointF(218, -80))
-    #     self.tiwen_graph.path.moveTo(-218, 80)
-    #     self.tiwen_graph.path.lineTo(QPointF(218, 80))
-    #     pen = QPen(QColor(255, 0, 0))
-    #     pen.setWidth(2)
-    #     item = QGraphicsPathItem(self.tiwen_graph.path)
-    #     item.setPen(pen)
-    #     item.setFlag(item.ItemIsMovable)
-    #     item.setFlag(item.ItemIsSelectable)
-    #     self.tiwen_graph.scene.addItem(item)
-    #     self.tiwen_graph.show()
-    #
-    #     self.xuetang_graph.scene = QGraphicsScene(self)
-    #     self.xuetang_graph.setScene(self.xuetang_graph.scene)
-    #     self.xuetang_graph.path = QPainterPath()
-    #     self.xuetang_graph.path.moveTo(-218, -80)
-    #     self.xuetang_graph.path.lineTo(QPointF(218, -80))
-    #     self.xuetang_graph.path.moveTo(-218, 80)
-    #     self.xuetang_graph.path.lineTo(QPointF(218, 80))
-    #     pen = QPen(QColor(255, 0, 0))
-    #     pen.setWidth(2)
-    #     item = QGraphicsPathItem(self.xuetang_graph.path)
-    #     item.setPen(pen)
-    #     item.setFlag(item.ItemIsMovable)
-    #     item.setFlag(item.ItemIsSelectable)
-    #     self.xuetang_graph.scene.addItem(item)
-    #     self.xuetang_graph.show()
-    #
-    #     self.wendu_graph.scene = QGraphicsScene(self)
-    #     self.wendu_graph.setScene(self.wendu_graph.scene)
-    #     self.wendu_graph.path = QPainterPath()
-    #     self.wendu_graph.path.moveTo(-218, -80)
-    #     self.wendu_graph.path.lineTo(QPointF(218, -80))
-    #     self.wendu_graph.path.moveTo(-218, 80)
-    #     self.wendu_graph.path.lineTo(QPointF(218, 80))
-    #     pen = QPen(QColor(255, 0, 0))
-    #     pen.setWidth(2)
-    #     item = QGraphicsPathItem(self.wendu_graph.path)
-    #     item.setPen(pen)
-    #     item.setFlag(item.ItemIsMovable)
-    #     item.setFlag(item.ItemIsSelectable)
-    #     self.wendu_graph.scene.addItem(item)
-    #     self.wendu_graph.show()
-    #
-    #     self.huxilv_graph.scene = QGraphicsScene(self)
-    #     self.huxilv_graph.setScene(self.huxilv_graph.scene)
-    #     self.huxilv_graph.path = QPainterPath()
-    #     self.huxilv_graph.path.moveTo(-218, -80)
-    #     self.huxilv_graph.path.lineTo(QPointF(218, -80))
-    #     self.huxilv_graph.path.moveTo(-218, 80)
-    #     self.huxilv_graph.path.lineTo(QPointF(218, 80))
-    #     pen = QPen(QColor(255, 0, 0))
-    #     pen.setWidth(2)
-    #     item = QGraphicsPathItem(self.huxilv_graph.path)
-    #     item.setPen(pen)
-    #     item.setFlag(item.ItemIsMovable)
-    #     item.setFlag(item.ItemIsSelectable)
-    #     self.huxilv_graph.scene.addItem(item)
-    #     self.huxilv_graph.show()
-    #
-    #     self.pingfen_graph.scene = QGraphicsScene(self)
-    #     self.pingfen_graph.setScene(self.pingfen_graph.scene)
-    #     self.pingfen_graph.path = QPainterPath()
-    #     self.pingfen_graph.path.moveTo(-218, -80)
-    #     self.pingfen_graph.path.lineTo(QPointF(218, -80))
-    #     self.pingfen_graph.path.moveTo(-218, 80)
-    #     self.pingfen_graph.path.lineTo(QPointF(218, 80))
-    #     pen = QPen(QColor(255, 0, 0))
-    #     pen.setWidth(2)
-    #     item = QGraphicsPathItem(self.pingfen_graph.path)
-    #     item.setPen(pen)
-    #     item.setFlag(item.ItemIsMovable)
-    #     item.setFlag(item.ItemIsSelectable)
-    #     self.pingfen_graph.scene.addItem(item)
-    #     self.pingfen_graph.show()
-    #
-    # def draw_graph(self):
-    #     self.draw_xintiao_graph()
-    #     self.draw_tiwen_graph()
-    #     self.draw_xuetang_graph()
-    #     self.draw_huxilv_graph()
-    #     self.draw_wendu_graph()
-    #     self.draw_pingfen_graph()
-    #
-    # def draw_xintiao_graph(self):
-    #     xintiao_average = 120
-    #     xintiao_line = 0
-    #     xintiao_sensitivity = 1
-    #
-    #     self.xintiao_graph.scene = QGraphicsScene(self)
-    #     self.xintiao_graph.setScene(self.xintiao_graph.scene)
-    #
-    #     coordinate_path = QPainterPath()
-    #     coordinate_path.moveTo(-218, -80)
-    #     coordinate_path.lineTo(QPointF(218, -80))
-    #     coordinate_path.moveTo(-218, 80)
-    #     coordinate_path.lineTo(QPointF(218, 80))
-    #     coordinate_pen = QPen(QColor(255, 0, 0))
-    #     coordinate_pen.setWidth(2)
-    #     coordinate_item = QGraphicsPathItem(coordinate_path)
-    #     coordinate_item.setPen(coordinate_pen)
-    #     self.xintiao_graph.scene.addItem(coordinate_item)
-    #     self.xintiao_graph.show()
-    #
-    #     self.xintiao_graph.path = QPainterPath()
-    #     for i in range(22):
-    #         if self.target_list[xintiao_line][i] == 0:
-    #             self.target_list[xintiao_line][i] = xintiao_average
-    #
-    #     self.xintiao_graph.path.moveTo(-218, (int(-self.target_list[xintiao_line][0])
-    #                                           + xintiao_average)*xintiao_sensitivity)
-    #
-    #     for i in range(20):
-    #         self.xintiao_graph.path.lineTo(QPointF(-200 + 20 * i, (int(-self.target_list[xintiao_line][i + 1])
-    #                                                                + xintiao_average)*xintiao_sensitivity))
-    #
-    #     self.xintiao_graph.path.lineTo(QPointF(218, (int(-self.target_list[xintiao_line][21])
-    #                                                  + xintiao_average)*xintiao_sensitivity))
-    #
-    #     pen = QPen(QColor(65, 155, 255))
-    #     pen.setWidth(2)
-    #     item = QGraphicsPathItem(self.xintiao_graph.path)
-    #     item.setPen(pen)
-    #     # item.setFlag(item.ItemIsMovable)
-    #     # item.setFlag(item.ItemIsSelectable)
-    #     self.xintiao_graph.scene.addItem(item)
-    #     self.xintiao_graph.show()
-    #
-    # def draw_tiwen_graph(self):
-    #     tiwen_average = 35
-    #     tiwen_line = 1
-    #     tiwen_sensitivity = 5
-    #
-    #     self.tiwen_graph.scene = QGraphicsScene(self)
-    #     self.tiwen_graph.setScene(self.tiwen_graph.scene)
-    #
-    #     coordinate_path = QPainterPath()
-    #     coordinate_path.moveTo(-218, -80)
-    #     coordinate_path.lineTo(QPointF(218, -80))
-    #     coordinate_path.moveTo(-218, 80)
-    #     coordinate_path.lineTo(QPointF(218, 80))
-    #     coordinate_pen = QPen(QColor(255, 0, 0))
-    #     coordinate_pen.setWidth(2)
-    #     coordinate_item = QGraphicsPathItem(coordinate_path)
-    #     coordinate_item.setPen(coordinate_pen)
-    #     self.tiwen_graph.scene.addItem(coordinate_item)
-    #     self.tiwen_graph.show()
-    #
-    #     self.tiwen_graph.path = QPainterPath()
-    #     for i in range(22):
-    #         if self.target_list[tiwen_line][i] == 0:
-    #             self.target_list[tiwen_line][i] = tiwen_average
-    #
-    #     self.tiwen_graph.path.moveTo(-218, (int(-self.target_list[tiwen_line][0])
-    #                                         + tiwen_average)*tiwen_sensitivity)
-    #
-    #     for i in range(20):
-    #         self.tiwen_graph.path.lineTo(QPointF(-200 + 20 * i, (int(-self.target_list[tiwen_line][i + 1])
-    #                                                              + tiwen_average)*tiwen_sensitivity))
-    #     self.tiwen_graph.path.lineTo(QPointF(218, (int(-self.target_list[tiwen_line][21])
-    #                                                + tiwen_average)*tiwen_sensitivity))
-    #
-    #     pen = QPen(QColor(65, 155, 255))
-    #     pen.setWidth(2)
-    #     item = QGraphicsPathItem(self.tiwen_graph.path)
-    #     item.setPen(pen)
-    #     # item.setFlag(item.ItemIsMovable)
-    #     # item.setFlag(item.ItemIsSelectable)
-    #     self.tiwen_graph.scene.addItem(item)
-    #     self.tiwen_graph.show()
-    #
-    # def draw_xuetang_graph(self):
-    #     xuetang_average = 4
-    #     xuetang_line = 2
-    #     xuetang_sensitivity = 20
-    #
-    #     self.xuetang_graph.scene = QGraphicsScene(self)
-    #     self.xuetang_graph.setScene(self.xuetang_graph.scene)
-    #
-    #     coordinate_path = QPainterPath()
-    #     coordinate_path.moveTo(-218, -80)
-    #     coordinate_path.lineTo(QPointF(218, -80))
-    #     coordinate_path.moveTo(-218, 80)
-    #     coordinate_path.lineTo(QPointF(218, 80))
-    #     coordinate_pen = QPen(QColor(255, 0, 0))
-    #     coordinate_pen.setWidth(2)
-    #     coordinate_item = QGraphicsPathItem(coordinate_path)
-    #     coordinate_item.setPen(coordinate_pen)
-    #     self.xuetang_graph.scene.addItem(coordinate_item)
-    #     self.xuetang_graph.show()
-    #
-    #     self.xuetang_graph.path = QPainterPath()
-    #     for i in range(22):
-    #         if self.target_list[xuetang_line][i] == 0:
-    #             self.target_list[xuetang_line][i] = xuetang_average
-    #
-    #     self.xuetang_graph.path.moveTo(-218, int((-self.target_list[xuetang_line][0]
-    #                                               + xuetang_average) * xuetang_sensitivity))
-    #     for i in range(20):
-    #         self.xuetang_graph.path.lineTo(QPointF(-200 + 20 * i, int((-self.target_list[xuetang_line][i+1]
-    #                                                                    + xuetang_average) * xuetang_sensitivity)))
-    #     self.xuetang_graph.path.lineTo(QPointF(218, int((-self.target_list[xuetang_line][21]
-    #                                                      + xuetang_average) * xuetang_sensitivity)))
-    #
-    #     pen = QPen(QColor(65, 155, 255))
-    #     pen.setWidth(2)
-    #     item = QGraphicsPathItem(self.xuetang_graph.path)
-    #     item.setPen(pen)
-    #     # item.setFlag(item.ItemIsMovable)
-    #     # item.setFlag(item.ItemIsSelectable)
-    #     self.xuetang_graph.scene.addItem(item)
-    #     self.xuetang_graph.show()
-    #
-    # def draw_huxilv_graph(self):
-    #     huxilv_average = 45
-    #     huxilv_line = 3
-    #     huxilv_sensitivity = 5
-    #
-    #     self.huxilv_graph.scene = QGraphicsScene(self)
-    #     self.huxilv_graph.setScene(self.huxilv_graph.scene)
-    #
-    #     coordinate_path = QPainterPath()
-    #     coordinate_path.moveTo(-218, -80)
-    #     coordinate_path.lineTo(QPointF(218, -80))
-    #     coordinate_path.moveTo(-218, 80)
-    #     coordinate_path.lineTo(QPointF(218, 80))
-    #     coordinate_pen = QPen(QColor(255, 0, 0))
-    #     coordinate_pen.setWidth(2)
-    #     coordinate_item = QGraphicsPathItem(coordinate_path)
-    #     coordinate_item.setPen(coordinate_pen)
-    #     self.huxilv_graph.scene.addItem(coordinate_item)
-    #     self.huxilv_graph.show()
-    #
-    #     self.huxilv_graph.path = QPainterPath()
-    #     for i in range(22):
-    #         if self.target_list[huxilv_line][i] == 0:
-    #             self.target_list[huxilv_line][i] = huxilv_average
-    #
-    #     self.huxilv_graph.path.moveTo(-218, int((-self.target_list[huxilv_line][0]
-    #                                              + huxilv_average) * huxilv_sensitivity))
-    #     for i in range(20):
-    #         self.huxilv_graph.path.lineTo(QPointF(-200 + 20 * i, int((-self.target_list[huxilv_line][i + 1]
-    #                                                                   + huxilv_average) * huxilv_sensitivity)))
-    #     self.huxilv_graph.path.lineTo(QPointF(218, int((-self.target_list[huxilv_line][21]
-    #                                                     + huxilv_average) * huxilv_sensitivity)))
-    #
-    #     pen = QPen(QColor(65, 155, 255))
-    #     pen.setWidth(2)
-    #     item = QGraphicsPathItem(self.huxilv_graph.path)
-    #     item.setPen(pen)
-    #     # item.setFlag(item.ItemIsMovable)
-    #     # item.setFlag(item.ItemIsSelectable)
-    #     self.huxilv_graph.scene.addItem(item)
-    #     self.huxilv_graph.show()
-    #
-    # def draw_wendu_graph(self):
-    #     wendu_average = 20
-    #     wendu_line = 4
-    #     wendu_sensitivity = 20
-    #
-    #     self.wendu_graph.scene = QGraphicsScene(self)
-    #     self.wendu_graph.setScene(self.wendu_graph.scene)
-    #
-    #     coordinate_path = QPainterPath()
-    #     coordinate_path.moveTo(-218, -80)
-    #     coordinate_path.lineTo(QPointF(218, -80))
-    #     coordinate_path.moveTo(-218, 80)
-    #     coordinate_path.lineTo(QPointF(218, 80))
-    #     coordinate_pen = QPen(QColor(255, 0, 0))
-    #     coordinate_pen.setWidth(2)
-    #     coordinate_item = QGraphicsPathItem(coordinate_path)
-    #     coordinate_item.setPen(coordinate_pen)
-    #     self.wendu_graph.scene.addItem(coordinate_item)
-    #     self.wendu_graph.show()
-    #
-    #     self.wendu_graph.path = QPainterPath()
-    #     for i in range(22):
-    #         if self.target_list[wendu_line][i] == 0:
-    #             self.target_list[wendu_line][i] = wendu_average
-    #
-    #     self.wendu_graph.path.moveTo(-218, int((-self.target_list[wendu_line][0]
-    #                                             + wendu_average) * wendu_sensitivity))
-    #     for i in range(20):
-    #         self.wendu_graph.path.lineTo(QPointF(-200 + 20 * i, int((-self.target_list[wendu_line][i + 1]
-    #                                                                  + wendu_average) * wendu_sensitivity)))
-    #     self.wendu_graph.path.lineTo(QPointF(218, int((-self.target_list[wendu_line][21]
-    #                                                    + wendu_average) * wendu_sensitivity)))
-    #
-    #     pen = QPen(QColor(65, 155, 255))
-    #     pen.setWidth(2)
-    #     item = QGraphicsPathItem(self.wendu_graph.path)
-    #     item.setPen(pen)
-    #     # item.setFlag(item.ItemIsMovable)
-    #     # item.setFlag(item.ItemIsSelectable)
-    #     self.wendu_graph.scene.addItem(item)
-    #     self.wendu_graph.show()
-    #
-    # def draw_pingfen_graph(self):
-    #     pingfen_average = 85
-    #     pingfen_line = 6
-    #     pingfen_sensitivity = 5
-    #
-    #     self.pingfen_graph.scene = QGraphicsScene(self)
-    #     self.pingfen_graph.setScene(self.pingfen_graph.scene)
-    #
-    #     coordinate_path = QPainterPath()
-    #     coordinate_path.moveTo(-218, -80)
-    #     coordinate_path.lineTo(QPointF(218, -80))
-    #     coordinate_path.moveTo(-218, 80)
-    #     coordinate_path.lineTo(QPointF(218, 80))
-    #     coordinate_pen = QPen(QColor(255, 0, 0))
-    #     coordinate_pen.setWidth(2)
-    #     coordinate_item = QGraphicsPathItem(coordinate_path)
-    #     coordinate_item.setPen(coordinate_pen)
-    #     self.pingfen_graph.scene.addItem(coordinate_item)
-    #     self.pingfen_graph.show()
-    #
-    #     self.pingfen_graph.path = QPainterPath()
-    #     for i in range(22):
-    #         if self.target_list[pingfen_line][i] == 0:
-    #             self.target_list[pingfen_line][i] = pingfen_average
-    #
-    #     self.pingfen_graph.path.moveTo(-218, int((-self.target_list[pingfen_line][0]
-    #                                               + pingfen_average) * pingfen_sensitivity))
-    #     for i in range(20):
-    #         self.pingfen_graph.path.lineTo(QPointF(-200 + 20 * i, int((-self.target_list[pingfen_line][i + 1]
-    #                                                                    + pingfen_average) * pingfen_sensitivity)))
-    #     self.pingfen_graph.path.lineTo(QPointF(218, int((-self.target_list[pingfen_line][21]
-    #                                                      + pingfen_average) * pingfen_sensitivity)))
-    #
-    #     pen = QPen(QColor(65, 155, 255))
-    #     pen.setWidth(2)
-    #     item = QGraphicsPathItem(self.pingfen_graph.path)
-    #     item.setPen(pen)
-    #     # item.setFlag(item.ItemIsMovable)
-    #     # item.setFlag(item.ItemIsSelectable)
-    #     self.pingfen_graph.scene.addItem(item)
-    #     self.pingfen_graph.show()
 
     def save_record(self, result):
         # current_time = datetime.datetime.now()
@@ -751,8 +333,38 @@ class play_Work(QObject):
         record_list = []
         for i in range(5):
             if result[i] == 1:
-                record_list.append(name_list[i])
-                record = "".join(record_list)
-                current_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-                with open(r"C:\\Users\\dev1se\\Desktop\\InfantGUI\\日志.txt", "a", encoding='utf-8') as f:
-                    f.write(current_time+"    "+record+"\n")
+                self.act_count[i] += 1
+        record_list.append(name_list[i])
+        # record = "".join(record_list)
+        self.time2 = time.time()
+        if (self.time2-self.time1) >= 10:
+            self.time1 = self.time2
+            current_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+            # with open(r"C:\\Users\\dev1se\\Desktop\\InfantGUI\\日志.txt", "a", encoding='utf-8') as f:
+            #     f.write(current_time+"    "+"过去30秒内 头部运动"+self.act_count[0].__str__()+"次 左手运动"+self.act_count[1].__str__() +
+            #             "次 左腿运动"+self.act_count[2].__str__()+"次 右手运动"+self.act_count[3].__str__()+"次 右腿运动"+self.act_count[4].__str__()+"次"+"\n")
+            with open(r"日志.txt", "a", encoding='utf-8') as f:
+                f.write(current_time+"    "+self.act_count.__str__()+"\n")
+            self.act_count = [0, 0, 0, 0, 0]
+
+    def read_record(self):
+        record_list = []
+        with open(r"日志.txt", "r") as f:
+            lines = f.readlines()
+            last_lines = lines[-10:]
+            for line in last_lines:
+                matches = re.findall(r'(\d+)[,\]]', line)
+                int_list = []
+                for i in matches:
+                    int_list.append(int(i))
+                record_list.append(int_list)
+        act_sum = [sum(i) for i in zip(*record_list)]
+        return act_sum
+
+    def show_record(self):
+        act_sum = self.read_record()
+        self.head.setText("头部运动："+str(act_sum[0])+"次")
+        self.left_hand.setText("左手运动："+str(act_sum[1])+"次")
+        self.right_hand.setText("右手运动：" + str(act_sum[2]) + "次")
+        self.left_feet.setText("左脚运动：" + str(act_sum[3]) + "次")
+        self.right_feet.setText("右脚运动：" + str(act_sum[4]) + "次")

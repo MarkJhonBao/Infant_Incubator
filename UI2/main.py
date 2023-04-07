@@ -52,14 +52,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # self.playwork.recognition_audio = self.audiolist_show
         # self.playwork.data_statistic_show = self.data_statistic_show
         # self.playwork.speech_signal = self.auidoplot_show
+
         self.playwork.target_Work.xintiao_value = self.xintiao_value
         self.playwork.target_Work.xuetang_value = self.xuetang_value
         self.playwork.target_Work.huxilv_value = self.huxilv_value
         self.playwork.target_Work.wendu_value = self.wendu_value
-        self.playwork.target_Work.tiye_value = self.tiye_value
         self.playwork.target_Work.tiwen_value = self.tiwen_value
         self.playwork.target_Work.pingfen_value = self.pingfen_value
-        self.playwork.target_Work.shijian_value = self.shijian_value
 
         self.playwork.target_Work.xintiao_graph = self.xintiao_graph
         self.playwork.target_Work.xuetang_graph = self.xuetang_graph
@@ -68,21 +67,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.playwork.target_Work.tiwen_graph = self.tiwen_graph
         self.playwork.target_Work.pingfen_graph = self.pingfen_graph
 
-        # self.targetwork.xintiao_value = self.xintiao_value
-        # self.targetwork.xuetang_value = self.xuetang_value
-        # self.targetwork.huxilv_value = self.huxilv_value
-        # self.targetwork.wendu_value = self.wendu_value
-        # self.targetwork.tiye_value = self.tiye_value
-        # self.targetwork.tiwen_value = self.tiwen_value
-        # self.targetwork.pingfen_value = self.pingfen_value
-        # self.targetwork.shijian_value = self.shijian_value
-        #
-        # self.targetwork.xintiao_graph = self.xintiao_graph
-        # self.targetwork.xuetang_graph = self.xuetang_graph
-        # self.targetwork.huxilv_graph = self.huxilv_graph
-        # self.targetwork.wendu_graph = self.wendu_graph
-        # self.targetwork.tiwen_graph = self.tiwen_graph
-        # self.targetwork.pingfen_graph = self.pingfen_graph
+        self.playwork.head = self.head
+        self.playwork.left_hand = self.left_hand
+        self.playwork.right_hand = self.right_hand
+        self.playwork.left_feet = self.left_feet
+        self.playwork.right_feet = self.right_feet
 
         self.play_thread = QThread()  # 创建线程
         self.playwork.moveToThread(self.play_thread)
