@@ -67,6 +67,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.playwork.target_Work.tiwen_graph = self.tiwen_graph
         self.playwork.target_Work.pingfen_graph = self.pingfen_graph
 
+        self.playwork.record_bar = self.target_bar
         self.playwork.head = self.head
         self.playwork.left_hand = self.left_hand
         self.playwork.right_hand = self.right_hand

@@ -19,10 +19,11 @@ import moviepy.editor as mp
 import random
 import imageio
 
-from UI2.inference_gui import infantDetection, moderl_load, center_crop#,audio_model_load,audio_model_detection
+from UI2.inference_gui import infantDetection, moderl_load, center_crop  # ,audio_model_load,audio_model_detection
 from UI2.target_work import target_Work
 
 Decode2Play = Queue()
+
 
 class cvDecode(QThread):
     def __init__(self):
@@ -61,9 +62,9 @@ class play_Work(QObject):
         super(play_Work, self).__init__()
         self.threadFlag = 0  # 控制线程退出
         self.playFlag = 0  # 控制播放/暂停
-        self.audio_path = ""#音频存放的路径
-        self.video_path = ""#视频存放的路径
-        #初始化对象
+        self.audio_path = ""  # 音频存放的路径
+        self.video_path = ""  # 视频存放的路径
+        # 初始化对象
         self.playLabel = QLabel()
         self.speech_signal = QLabel()
         self.recognition_result = QListWidget()
@@ -75,36 +76,38 @@ class play_Work(QObject):
         self.right_hand = QLabel()
         self.left_feet = QLabel()
         self.right_feet = QLabel()
+        self.record_bar = QLabel()
 
-        #导入模型
+        # 导入模型
         self.infant_detection_model = moderl_load()
         # self.aduio_detection_model = audio_model_load()
 
-        #初始化音频相关参数
+        # 初始化音频相关参数
         self.clip = []
-        self.clip2 = [] #不压缩的视频流
-        self.count=0
-        self.audio_label=["human","device","cry","background"]
-        self.sorted_indexes=[]
-        self.flag=True
-        self.ret=0
-        self.cry_time=0
-        self.sum=0
-        self.start_time=0
+        self.clip2 = []  # 不压缩的视频流
+        self.count = 0
+        self.audio_label = ["human", "device", "cry", "background"]
+        self.sorted_indexes = []
+        self.flag = True
+        self.ret = 0
+        self.cry_time = 0
+        self.sum = 0
+        self.start_time = 0
         self.target_Work = target_Work()
         self.act_count = [0, 0, 0, 0, 0]
         self.time1 = time.time()
         self.time2 = 0
 
         #   不需要重写run方法
+
     def play(self):
         last_result = ' '
         this_result = ' '
-        self.prob_result = np.array([[0,0,0,0,0]])
+        self.prob_result = np.array([[0, 0, 0, 0, 0]])
         # 转换视频数据为音频数据
         # self.audio_path = self.video_to_audio(self.video_path)
         # #获取音频视频的模型
-        model=self.infant_detection_model
+        model = self.infant_detection_model
         # audio_model=self.aduio_detection_model
         # #获取音频的数据
         # self.audio_data,self.samplate=librosa.load(self.audio_path,sr=None)
@@ -118,7 +121,7 @@ class play_Work(QObject):
         while self.threadFlag:
             # print("进入",switchflag)
             if not Decode2Play.empty():
-                #读取队列中的数据并处理
+                # 读取队列中的数据并处理
                 frame = Decode2Play.get()
                 tmp_ = cv2.resize(frame, (480, 270))
                 # tmp_ = cv2.resize(frame, (192, 108))
@@ -126,7 +129,7 @@ class play_Work(QObject):
                 self.clip2.append(tmp_)
 
                 if cnt % 5 == 0:
-                    cnt=0
+                    cnt = 0
                     tmp_ = center_crop(cv2.resize(frame, (171, 128)))
                     tmp = tmp_ - np.array([[[90.0, 98.0, 102.0]]])
                     self.clip.append(tmp)
@@ -143,19 +146,19 @@ class play_Work(QObject):
                 #     self.start_time = 0
 
                 # if cnt%12==0 and self.playFlag ==1:
-                    # self.audio_clip = audio_model_detection(audio_model, self.audio_data[self.count * self.samplate // 2:(self.count + 1) * self.samplate // 2]
-                    #                                         , self.samplate)
-                    # print(self.audio_clip)
-                    # self.show_audio(self.audio_clip, self.count)
-                    # self.count += 1
-                    # imagea=self.draw_audio(self.audio_clip).toqpixmap()
-                    # self.speech_signal.setPixmap(imagea)
-                    # self.speech_signal.setScaledContents(True)
+                # self.audio_clip = audio_model_detection(audio_model, self.audio_data[self.count * self.samplate // 2:(self.count + 1) * self.samplate // 2]
+                #                                         , self.samplate)
+                # print(self.audio_clip)
+                # self.show_audio(self.audio_clip, self.count)
+                # self.count += 1
+                # imagea=self.draw_audio(self.audio_clip).toqpixmap()
+                # self.speech_signal.setPixmap(imagea)
+                # self.speech_signal.setScaledContents(True)
 
                 if len(self.clip) == 16 and self.playFlag == 1:
                     frame, class_result, prob_result = infantDetection(model, clip=self.clip, frame=frame)
                     self.prob_result = prob_result
-                    c=sum(sum(class_result))
+                    c = sum(sum(class_result))
                     # print(sum(class_result))
                     result = sum(class_result)
                     class_result = str(class_result)
@@ -179,7 +182,6 @@ class play_Work(QObject):
                     self.save_record(result)
                     self.show_record()
 
-
                 if self.playFlag == 1:
                     frame = cv2.resize(frame, (340, 190), cv2.INTER_LINEAR)
                     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -189,7 +191,8 @@ class play_Work(QObject):
                     if (last_result != this_result):
                         now = datetime.datetime.now()
                         # print(self.show_data(prob_result))
-                        self.recognition_result.addItem(now.strftime("%m-%d %H:%M:%S") + '识别结果：' + self.show_data(self.prob_result))
+                        self.recognition_result.addItem(
+                            now.strftime("%m-%d %H:%M:%S") + '识别结果：' + self.show_data(self.prob_result))
                         # self.data_statistic(this_result)  # 统计结果自增1
                         piximage_data_statistic = self.draw_bar().toqpixmap()
                         self.data_statistic_show.setPixmap(piximage_data_statistic)
@@ -212,24 +215,25 @@ class play_Work(QObject):
             res = "正常"
         return res
 
-    def show_audio(self,data,count):
-        if len(self.sorted_indexes)>=3:
-            array1=np.array(self.sorted_indexes)
+    def show_audio(self, data, count):
+        if len(self.sorted_indexes) >= 3:
+            array1 = np.array(self.sorted_indexes)
             while True:
                 # print(self.ret,count)
-                if self.ret>=count:
+                if self.ret >= count:
                     break;
                 # print(is_cry(sorted_indexes,i,length),flag,i)
                 if self.is_cry(array1, self.ret) == True:
                     self.ret = self.ret + 1
                     if self.flag == True:
                         self.flag = False
-                        self.cry_time+=1
+                        self.cry_time += 1
                         # print("第 {} 次哭：开始时间:{}s".format(self.cry_time, (ret-1) * 0.5))
-                        now=datetime.datetime.now()
-                        self.recognition_audio.addItem(now.strftime("%m-%d %H:%M:%S")+"第"
-                                                       +str(self.cry_time)+"次哭：开始时间："+str((self.ret-1)*0.5)+"s")
-                        self.start_time=(self.ret-1)*0.5
+                        now = datetime.datetime.now()
+                        self.recognition_audio.addItem(now.strftime("%m-%d %H:%M:%S") + "第"
+                                                       + str(self.cry_time) + "次哭：开始时间：" + str(
+                            (self.ret - 1) * 0.5) + "s")
+                        self.start_time = (self.ret - 1) * 0.5
                         print(self.start_time)
                     # print("start:",i, cry_time)
                 elif self.is_cry(array1, self.ret) == False:
@@ -238,19 +242,19 @@ class play_Work(QObject):
                         self.flag = True
                         # print(" 结束时间:{}s".format((ret - 1) * 0.5))
                         self.recognition_audio.addItem(" 结束时间：" + str((self.ret - 1) * 0.5) + "s")
-                        self.sum=self.sum+(self.ret-1)*0.5-self.start_time
-                        print(self.sum,self.start_time)
-            if count >=self.auido_duration*2:
-                if self.flag==False:
+                        self.sum = self.sum + (self.ret - 1) * 0.5 - self.start_time
+                        print(self.sum, self.start_time)
+            if count >= self.auido_duration * 2:
+                if self.flag == False:
                     self.recognition_audio.addItem(" 结束时间：" + str((self.ret) * 0.5) + "s")
-                self.recognition_audio.addItem("哭声总时长："+str(self.sum)+"s")
+                self.recognition_audio.addItem("哭声总时长：" + str(self.sum) + "s")
             self.sorted_indexes.append(np.argsort(data, axis=-1)[-1: -4 - 1: -1])
         else:
             self.sorted_indexes.append(np.argsort(data, axis=-1)[-1: -4 - 1: -1])
 
     # 判断每帧是否哭
-    def is_cry(self,sorted_list, index):
-        length=len(sorted_list[:, 0])
+    def is_cry(self, sorted_list, index):
+        length = len(sorted_list[:, 0])
         if index == 0:
             index += 1
         if index == length - 1:
@@ -258,12 +262,14 @@ class play_Work(QObject):
         if index > 0 and index < length - 1:
             # print(self.audio_label[sorted_list[index, 0]])
             if self.audio_label[sorted_list[index, 0]] == "cry":
-                if self.audio_label[sorted_list[index - 1, 0]] == "cry" or self.audio_label[sorted_list[index + 1, 0]] == "cry":
+                if self.audio_label[sorted_list[index - 1, 0]] == "cry" or self.audio_label[
+                    sorted_list[index + 1, 0]] == "cry":
                     return True
                 else:
                     return False
             else:
-                if self.audio_label[sorted_list[index - 1, 0]] == "cry" and self.audio_label[sorted_list[index + 1, 0]] == "cry":
+                if self.audio_label[sorted_list[index - 1, 0]] == "cry" and self.audio_label[
+                    sorted_list[index + 1, 0]] == "cry":
                     return True
                 else:
                     return False
@@ -289,10 +295,10 @@ class play_Work(QObject):
         image = Image.frombytes("RGBA", (w, h), buf.tostring())
         return image
 
-    def draw_audio(self,data):
+    def draw_audio(self, data):
         # print("start")
         plt.rcParams['font.sans-serif'] = ['SimHei']
-        labels=["人说话声","设备声","哭声","背景噪声"]
+        labels = ["人说话声", "设备声", "哭声", "背景噪声"]
         fig = plt.figure(figsize=(6.5, 4))
         # print("end")
         plt.ylim(0, 1)
@@ -337,14 +343,14 @@ class play_Work(QObject):
         record_list.append(name_list[i])
         # record = "".join(record_list)
         self.time2 = time.time()
-        if (self.time2-self.time1) >= 10:
+        if (self.time2 - self.time1) >= 10:
             self.time1 = self.time2
             current_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
             # with open(r"C:\\Users\\dev1se\\Desktop\\InfantGUI\\日志.txt", "a", encoding='utf-8') as f:
             #     f.write(current_time+"    "+"过去30秒内 头部运动"+self.act_count[0].__str__()+"次 左手运动"+self.act_count[1].__str__() +
             #             "次 左腿运动"+self.act_count[2].__str__()+"次 右手运动"+self.act_count[3].__str__()+"次 右腿运动"+self.act_count[4].__str__()+"次"+"\n")
             with open(r"日志.txt", "a", encoding='utf-8') as f:
-                f.write(current_time+"    "+self.act_count.__str__()+"\n")
+                f.write(current_time + "    " + self.act_count.__str__() + "\n")
             self.act_count = [0, 0, 0, 0, 0]
 
     def read_record(self):
@@ -363,8 +369,31 @@ class play_Work(QObject):
 
     def show_record(self):
         act_sum = self.read_record()
-        self.head.setText("头部运动："+str(act_sum[0])+"次")
-        self.left_hand.setText("左手运动："+str(act_sum[1])+"次")
+        self.head.setText("头部运动：" + str(act_sum[0]) + "次")
+        self.left_hand.setText("左手运动：" + str(act_sum[1]) + "次")
         self.right_hand.setText("右手运动：" + str(act_sum[2]) + "次")
         self.left_feet.setText("左脚运动：" + str(act_sum[3]) + "次")
         self.right_feet.setText("右脚运动：" + str(act_sum[4]) + "次")
+
+        record_bar = self.draw_record_bar().toqpixmap()
+        self.record_bar.setPixmap(record_bar)
+        self.record_bar.setScaledContents(True)
+
+    def draw_record_bar(self):
+        plt.rcParams['font.sans-serif'] = ['SimHei']
+        name_list = ['头部', '左手', '右手', '左腿', '右腿']
+        # num_list = self.prob_result
+        num_list = self.read_record()
+        fig = plt.figure(figsize=(510 / 110, 260 / 110), dpi=110)
+
+        # plt.ylim(0, 1)
+        plt.bar(range(len(num_list)), num_list, tick_label=name_list)
+        # print("end")
+        canvas = FigureCanvasAgg(plt.gcf())
+        fig.canvas.draw()
+        w, h = canvas.get_width_height()
+        buf = np.fromstring(canvas.tostring_argb(), dtype=np.uint8)
+        buf.shape = (w, h, 4)
+        buf = np.roll(buf, 3, axis=2)
+        image = Image.frombytes("RGBA", (w, h), buf.tostring())
+        return image

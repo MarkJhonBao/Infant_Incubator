@@ -190,320 +190,6 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>930</x>
-      <y>500</y>
-      <width>890</width>
-      <height>514</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
-     <item>
-      <layout class="QGridLayout" name="gridLayout_23">
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_33">
-         <property name="styleSheet">
-          <string notr="true">font: 15pt &quot;黑体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>保育箱温度：26℃</string>
-         </property>
-        </widget>
-       </item>
-       <item row="12" column="0">
-        <widget class="QLabel" name="label_43">
-         <property name="styleSheet">
-          <string notr="true">font: 15pt &quot;黑体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>腋温：37.2 ℃</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="label_37">
-         <property name="styleSheet">
-          <string notr="true">font: 15pt &quot;黑体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>体温：36 ℃</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="label_36">
-         <property name="styleSheet">
-          <string notr="true">font: 15pt &quot;黑体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>体重：2.97 Kg</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="label_35">
-         <property name="styleSheet">
-          <string notr="true">font: 15pt &quot;黑体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>呼吸： 48 t/min</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="label_39">
-         <property name="styleSheet">
-          <string notr="true">font: 15pt &quot;黑体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>脉搏：126 t/min</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_34">
-         <property name="styleSheet">
-          <string notr="true">font: 15pt &quot;黑体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>舒张压：37 mmHg</string>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="0">
-        <widget class="QLabel" name="label_41">
-         <property name="styleSheet">
-          <string notr="true">font: 15pt &quot;黑体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>营养(奶量）：35 ml</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label_32">
-         <property name="styleSheet">
-          <string notr="true">font: 15pt &quot;黑体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>收缩压：43 mmHg</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="label_38">
-         <property name="styleSheet">
-          <string notr="true">font: 15pt &quot;黑体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>氧饱和度：98 %</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="label_40">
-         <property name="styleSheet">
-          <string notr="true">font: 15pt &quot;黑体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>血糖：5.1 mmol/mL</string>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="0">
-        <widget class="QLabel" name="label_42">
-         <property name="styleSheet">
-          <string notr="true">font: 15pt &quot;黑体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>大便量：21 g</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <item>
-          <widget class="QSpinBox" name="spinBox">
-           <property name="value">
-            <number>1</number>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_68">
-           <property name="styleSheet">
-            <string notr="true">font: 20pt &quot;黑体&quot;;</string>
-           </property>
-           <property name="text">
-            <string>号婴儿的生理具体信息：</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QGridLayout" name="gridLayout_25">
-       <item row="11" column="0">
-        <widget class="QLabel" name="label_67">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="label_73">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="label_58">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="label_66">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="right_feet">
-         <property name="styleSheet">
-          <string notr="true">font: 15pt &quot;黑体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>右脚运动：30次</string>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="0">
-        <widget class="QLabel" name="label_59">
-         <property name="styleSheet">
-          <string notr="true">font: 15pt &quot;黑体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>下次婴儿查看时间预估：3h Hours Later</string>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="0">
-        <widget class="QLabel" name="label_72">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="left_feet">
-         <property name="styleSheet">
-          <string notr="true">font: 15pt &quot;黑体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>左脚运动：29次</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="head">
-         <property name="styleSheet">
-          <string notr="true">font: 15pt &quot;黑体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>头部运动：15次</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="left_hand">
-         <property name="styleSheet">
-          <string notr="true">font: 15pt &quot;黑体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>左手运动：28次</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="right_hand">
-         <property name="styleSheet">
-          <string notr="true">font: 15pt &quot;黑体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>右手运动：38次</string>
-         </property>
-        </widget>
-       </item>
-       <item row="16" column="0">
-        <widget class="QLabel" name="label_62">
-         <property name="styleSheet">
-          <string notr="true">font: 15pt &quot;黑体&quot;;</string>
-         </property>
-         <property name="text">
-          <string>婴儿生理状态评分： 88</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <widget class="QLabel" name="label_69">
-           <property name="styleSheet">
-            <string notr="true">font: 20pt &quot;黑体&quot;;</string>
-           </property>
-           <property name="text">
-            <string>在过去</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QSpinBox" name="spinBox_2">
-           <property name="value">
-            <number>10</number>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_70">
-           <property name="styleSheet">
-            <string notr="true">font: 20pt &quot;黑体&quot;;</string>
-           </property>
-           <property name="text">
-            <string>到</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QSpinBox" name="spinBox_3">
-           <property name="value">
-            <number>20</number>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_71">
-           <property name="styleSheet">
-            <string notr="true">font: 20pt &quot;黑体&quot;;</string>
-           </property>
-           <property name="text">
-            <string>分钟婴儿的活动情况：</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </widget>
    <widget class="QSplitter" name="splitter_6">
     <property name="geometry">
      <rect>
@@ -537,7 +223,7 @@
        <string/>
       </property>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QGridLayout" name="gridLayout">
        <property name="spacing">
         <number>0</number>
@@ -2379,6 +2065,322 @@
       </layout>
      </widget>
     </widget>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>932</x>
+      <y>502</y>
+      <width>366</width>
+      <height>481</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QSpinBox" name="spinBox">
+         <property name="value">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_68">
+         <property name="styleSheet">
+          <string notr="true">font: 20pt &quot;黑体&quot;;</string>
+         </property>
+         <property name="text">
+          <string>号婴儿的生理具体信息：</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_33">
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>保育箱温度：26℃</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_34">
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>舒张压：37 mmHg</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_32">
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>收缩压：43 mmHg</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_35">
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>呼吸： 48 t/min</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_36">
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>体重：2.97 Kg</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_37">
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>体温：36 ℃</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_38">
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>氧饱和度：98 %</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_39">
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>脉搏：126 t/min</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_40">
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>血糖：5.1 mmol/mL</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_41">
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>营养(奶量）：35 ml</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_42">
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>大便量：21 g</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_43">
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>腋温：37.2 ℃</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="target_bar">
+    <property name="geometry">
+     <rect>
+      <x>1310</x>
+      <y>530</y>
+      <width>511</width>
+      <height>260</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>500</width>
+      <height>260</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>1310</x>
+      <y>500</y>
+      <width>514</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_69">
+       <property name="styleSheet">
+        <string notr="true">font: 20pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>在过去</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="spinBox_2">
+       <property name="value">
+        <number>10</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_70">
+       <property name="styleSheet">
+        <string notr="true">font: 20pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>到</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="spinBox_3">
+       <property name="value">
+        <number>20</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_71">
+       <property name="styleSheet">
+        <string notr="true">font: 20pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>分钟婴儿的活动情况：</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>1310</x>
+      <y>790</y>
+      <width>511</width>
+      <height>191</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="head">
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>头部运动：15次</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="left_hand">
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>左手运动：28次</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="right_hand">
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>右手运动：38次</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="left_feet">
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>左脚运动：29次</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="right_feet">
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>右脚运动：30次</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_59">
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>下次婴儿查看时间预估：3h Hours Later</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_62">
+       <property name="styleSheet">
+        <string notr="true">font: 15pt &quot;黑体&quot;;</string>
+       </property>
+       <property name="text">
+        <string>婴儿生理状态评分： 88</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
